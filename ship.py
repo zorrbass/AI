@@ -29,7 +29,7 @@ class Ship:
         """Update the ships position based on the movement flag."""
         # Update the ship's  x value not the rect which follows in the next line
         # setting the max movement to 0 left and screen width minus img size
-        if self.moving_right and self.x < self.settings.screen_width-44:
+        if self.moving_right and self.x < self.settings.screen_width - 44:
             self.x += self.settings.ship_speed
         if self.moving_left and self.x > 0:
             self.x -= self.settings.ship_speed
@@ -37,6 +37,6 @@ class Ship:
         self.rect.x = self.x
 
     def blitme(self):
-        """Draw the ship at its curren position."""
+        """Draw the ship at its current position."""
         self.screen.blit(self.image, self.rect)
 

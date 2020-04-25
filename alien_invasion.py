@@ -80,13 +80,23 @@ class AlienInvasion:
             self._fire_bullet()
         elif event.key == pygame.K_p:
             self._start_new_game()
-        elif event.key == pygame.K_7:
-            self.settings.bullet_width = 600
+        elif event.key == pygame.K_KP7:
+            self.cheat_7()
+        elif event.key == pygame.K_KP8:
+            self.cheat_8()
+        elif event.key == pygame.K_KP9:
+            self.cheat_9()
+        elif event.key == pygame.K_KP0:
+            self.cheat_off()
         elif event.key == pygame.K_q:
             sys.exit()
 
     def _start_new_game(self):
+        """Resets aliens/bullets, Creates new fleet and checks if game
+        is already active"""
         if not self.stats.game_active:
+            # Reset the game settings.
+            self.settings.initialize_dynamic_settings()
             # Reset the game statistics.
             self.stats.reset_stats()
             self.stats.game_active = True
@@ -143,11 +153,12 @@ class AlienInvasion:
         """Respond to bullet alien collision"""
         # Remove any bullets and aliens that have collided
         collisions = pygame.sprite.groupcollide(
-            self.bullets, self.aliens, False, True)
+            self.bullets, self.aliens, self.settings.shoot_though, True)
         if not self.aliens:
             # Destroy existing bullets and create new fleet
             self.bullets.empty()
             self._create_fleet()
+            self.settings.increase_speed()
 
     def _update_aliens(self):
         """
@@ -240,6 +251,19 @@ class AlienInvasion:
                 # Treat this the same way as if the ship got hit
                 self._ship_hit()
                 break
+
+    def cheat_7(self):
+        self.settings.bullet_width = 500
+
+    def cheat_8(self):
+        self.settings.bullets_allowed = 6
+
+    def cheat_9(self):
+        self.settings.shoot_though = False
+
+    def cheat_off(self):
+        self.settings.revert_std_settings()
+
 
 
 if __name__ == "__main__":

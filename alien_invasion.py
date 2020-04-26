@@ -14,6 +14,7 @@ from scoreboard import Scoreboard
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior"""
+
     def __init__(self):
         """Initialize the game and create game resources"""
         pygame.init()
@@ -134,7 +135,7 @@ class AlienInvasion:
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
 
-        # Drw the score information.
+        # Draw the score information.
         self.sb.show_score()
 
         # Draw the play button if the game is inactive
@@ -159,6 +160,8 @@ class AlienInvasion:
     def _check_bullet_alien_collision(self):
         """Respond to bullet alien collision"""
         # Remove any bullets and aliens that have collided
+        # groupcollide stores in a dictionary
+        # Boulian values determine who will be deleted
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.aliens, self.settings.shoot_though, True)
 
@@ -166,11 +169,18 @@ class AlienInvasion:
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
+            self.sb.check_high_score()
+
+        # Once all the aliens are shot down.
         if not self.aliens:
             # Destroy existing bullets and create new fleet
             self.bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
+
+            # Increase level.
+            self.stats.level += 1
+            self.sb.prep_level()
 
     def _update_aliens(self):
         """
@@ -219,7 +229,8 @@ class AlienInvasion:
         alien_width, alien_height = alien.rect.size
         alien.x = alien_width + 2 * alien_width * alien_number
         alien.rect.x = alien.x
-        alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
+        alien.rect.y = (alien.rect.height + 50) \
+                       + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
 
     def _check_fleet_edges(self):
@@ -275,7 +286,6 @@ class AlienInvasion:
 
     def cheat_off(self):
         self.settings.revert_std_settings()
-
 
 
 if __name__ == "__main__":

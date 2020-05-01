@@ -11,6 +11,8 @@ from game_stats import GameStats
 from button import Button
 from scoreboard import Scoreboard
 
+"""This is the almost identical original version of the book"""
+
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior"""
